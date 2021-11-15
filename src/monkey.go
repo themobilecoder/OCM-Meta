@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -46,31 +45,27 @@ type Monkey struct {
 }
 
 func GetOnChainMonkeys() []Monkey {
-	err := DownloadFile("/tmp/meta.csv", "https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/OCM_meta_traits.csv")
+	monkey_traits_csv, err := CurlData("https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/OCM_meta_traits.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = DownloadFile("/tmp/twins.json", "https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/meta_traits.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	monkeys, err := buildMonkeysFromCsv("/tmp/meta.csv")
+	twin_traits_json, err := CurlData("https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/meta_traits.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	updateMonkeysWithTwinMetaFromJson("/tmp/twins.json", monkeys)
+	monkeys, err := buildMonkeysFromCsv(monkey_traits_csv)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	updateMonkeysWithTwinMetaFromJson(twin_traits_json, monkeys)
 	return monkeys
 }
 
-func buildMonkeysFromCsv(file string) ([]Monkey, error) {
+func buildMonkeysFromCsv(content string) ([]Monkey, error) {
 	var monkeys []Monkey
-	csv_file, err := os.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-	r := csv.NewReader(strings.NewReader(string(csv_file)))
+	r := csv.NewReader(strings.NewReader(content))
 	records, err := r.ReadAll()
 	if err != nil {
 		return nil, err
@@ -100,13 +95,10 @@ func buildMonkeysFromCsv(file string) ([]Monkey, error) {
 	return monkeys, nil
 }
 
-func updateMonkeysWithTwinMetaFromJson(file string, monkeys []Monkey) {
-	j, err := os.ReadFile(file)
-	if err != nil {
-		log.Fatal(err)
-	}
+func updateMonkeysWithTwinMetaFromJson(content string, monkeys []Monkey) {
+
 	var meta_traits map[string]interface{}
-	json.Unmarshal([]byte(j), &meta_traits)
+	json.Unmarshal([]byte(content), &meta_traits)
 
 	addMetaTraitToMonkeys(monkeys, meta_traits, NO_POKER_HAND)
 	addMetaTraitToMonkeys(monkeys, meta_traits, PAIR_ONE)
