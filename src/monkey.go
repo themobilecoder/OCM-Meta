@@ -55,7 +55,7 @@ func GetOnChainMonkeys() []Monkey {
 		log.Fatal(err)
 	}
 
-	monkeys, err := buildMonkeysFromCsv("/tmp/ocm.csv")
+	monkeys, err := buildMonkeysFromCsv("/tmp/meta.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -131,7 +131,8 @@ func updateMonkeysWithTwinMetaFromJson(file string, monkeys []Monkey) {
 func addMetaTraitToMonkeys(monkeys []Monkey, meta_traits map[string]interface{}, trait string) {
 	meta_trait, ok := meta_traits[trait].([]interface{})
 	if !ok {
-		log.Fatalln("Unknown meta trait property")
+		log.Println("Unknown meta trait property")
+		return
 	}
 	for _, v := range meta_trait {
 		id := int(v.(float64))
@@ -142,12 +143,14 @@ func addMetaTraitToMonkeys(monkeys []Monkey, meta_traits map[string]interface{},
 func addTwinsFromXpletsJson(monkeys []Monkey, meta_traits map[string]interface{}, trait string) {
 	meta_trait, ok := meta_traits[trait].([]interface{})
 	if !ok {
-		log.Fatalln("Unknown meta trait property")
+		log.Println("Unknown meta trait property")
+		return
 	}
 	for _, id := range meta_trait {
 		obj, ok := id.(map[string]interface{})
 		if !ok {
-			log.Fatalln("Invalid format: Not a twin object")
+			log.Println("Invalid format: Not a twin object")
+			return
 		}
 		for _, ids := range obj {
 			id_array := ids.([]interface{})
