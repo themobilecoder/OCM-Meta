@@ -11,7 +11,7 @@ tasks:
   build:
     desc: Builds the app
     cmds:
-      - go build -o bin/ocm_meta -v ./src/
+      - go build -o bin/ocm_meta -v main.go
   run:
     desc: Start the app
     cmds:

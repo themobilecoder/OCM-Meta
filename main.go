@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/themobilecoder/ocm-meta/meta"
+)
 
 func main() {
 	//Build monkey meta records
-	monkeys := GetOnChainMonkeys()
+	monkeys := meta.GetOnChainMonkeys()
 
 	fmt.Printf("%+v\n", monkeys[4642-1])
 	fmt.Printf("%+v\n", monkeys[1179-1])
