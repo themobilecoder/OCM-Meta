@@ -3,20 +3,35 @@ Go server for to provide a list of OnChainMonkey metas from [Metagood OCM Repo](
 
 
 ## Installation
-### Mac
-
-Using Homebrew
 
 ```bash
-brew install go-task/tap/go-task
+$ go get -u github.com/themobilecoder/ocm-meta
 ```
 
 
 ## Usage
 
-```bash
-$ task build
-$ bin/ocm_meta
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/themobilecoder/ocm-meta/meta"
+)
+
+func main() {
+	monkeys := meta.GetOnChainMonkeys()
+
+	fmt.Printf("%+v\n", monkeys[4642-1])
+	fmt.Printf("%+v\n", monkeys[1179-1])
+	fmt.Printf("%+v\n", monkeys[5961-1])
+	fmt.Printf("%+v\n", monkeys[8059-1])
+	fmt.Printf("%+v\n", monkeys[7753-1])
+	fmt.Printf("%+v\n", monkeys[2301-1])
+	fmt.Printf("%+v\n", monkeys[965-1])
+}
+
 ```
 
 ## Contributing
