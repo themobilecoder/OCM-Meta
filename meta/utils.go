@@ -9,11 +9,11 @@ import (
 	"os"
 )
 
-func GetFirstIntReturn(i int, err error) int {
+func getFirstIntReturn(i int, err error) int {
 	return i
 }
 
-func CurlData(url string) (string, error) {
+func curlData(url string) (string, error) {
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -34,7 +34,7 @@ func CurlData(url string) (string, error) {
 	}
 }
 
-func DownloadFile(filepath string, url string) error {
+func downloadFile(filepath string, url string) error {
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -52,8 +52,8 @@ func DownloadFile(filepath string, url string) error {
 	return err
 }
 
-func Filter(arr []int, cond func(int) bool) []int {
-	result := []int{}
+func filter(arr []string, cond func(string) bool) []string {
+	result := []string{}
 	for i := range arr {
 		if cond(arr[i]) {
 			result = append(result, arr[i])

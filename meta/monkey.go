@@ -27,29 +27,29 @@ const TWINS = "twins"
 const TRIPLETS = "triplets"
 
 type Monkey struct {
-	Id          int
-	Hat         int
-	Fur         int
-	Clothes     int
-	Eyes        int
-	Earring     int
-	Mouth       int
-	Background  int
-	Trait_count int
+	Id          string
+	Hat         string
+	Fur         string
+	Clothes     string
+	Eyes        string
+	Earring     string
+	Mouth       string
+	Background  string
+	Trait_count string
 	Color_match string
 	Mouth_match string
-	Zeros       int
+	Zeros       string
 	Nips        string
-	Xplets      []int
+	Xplets      []string
 	Poker_hands []string
 }
 
 func GetOnChainMonkeys() []Monkey {
-	monkey_traits_csv, err := CurlData("https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/OCM_meta_traits.csv")
+	monkey_traits_csv, err := curlData("https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/OCM_meta_traits.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
-	twin_traits_json, err := CurlData("https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/meta_traits.json")
+	twin_traits_json, err := curlData("https://raw.githubusercontent.com/metagood/OnChainMonkeyData/main/meta_traits.json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,20 +75,20 @@ func buildMonkeysFromCsv(content string) ([]Monkey, error) {
 			continue
 		}
 		monkey := Monkey{
-			Id:          GetFirstIntReturn(strconv.Atoi(record[0])),
-			Hat:         GetFirstIntReturn(strconv.Atoi(record[1])),
-			Fur:         GetFirstIntReturn(strconv.Atoi(record[2])),
-			Clothes:     GetFirstIntReturn(strconv.Atoi(record[3])),
-			Eyes:        GetFirstIntReturn(strconv.Atoi(record[4])),
-			Earring:     GetFirstIntReturn(strconv.Atoi(record[5])),
-			Mouth:       GetFirstIntReturn(strconv.Atoi(record[6])),
-			Background:  GetFirstIntReturn(strconv.Atoi(record[7])),
-			Trait_count: GetFirstIntReturn(strconv.Atoi(record[8])),
+			Id:          record[0],
+			Hat:         record[1],
+			Fur:         record[2],
+			Clothes:     record[3],
+			Eyes:        record[4],
+			Earring:     record[5],
+			Mouth:       record[6],
+			Background:  record[7],
+			Trait_count: record[8],
 			Color_match: record[9],
 			Mouth_match: record[10],
-			Zeros:       GetFirstIntReturn(strconv.Atoi(record[11])),
+			Zeros:       record[11],
 			Nips:        record[12],
-			Xplets:      []int{},
+			Xplets:      []string{},
 		}
 		monkeys = append(monkeys, monkey)
 	}
@@ -146,15 +146,16 @@ func addTwinsFromXpletsJson(monkeys []Monkey, meta_traits map[string]interface{}
 		}
 		for _, ids := range obj {
 			id_array := ids.([]interface{})
-			xplets := []int{}
+			xplets := []string{}
 			for _, twin := range id_array {
-				xplets = append(xplets, int(twin.(float64)))
+				xplets = append(xplets, strconv.Itoa(int(twin.(float64))))
 			}
 			for _, twin := range xplets {
-				filtered := Filter(xplets, func(i int) bool {
+				filtered := filter(xplets, func(i string) bool {
 					return i != twin
 				})
-				monkeys[twin-1].Xplets = filtered
+				twinInt, _ := strconv.Atoi(twin)
+				monkeys[twinInt-1].Xplets = filtered
 			}
 		}
 	}
