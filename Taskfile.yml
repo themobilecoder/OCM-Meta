@@ -15,4 +15,9 @@ tasks:
   run:
     desc: Start the app
     cmds:
-      - run bin/ocm_meta
+      - bin/ocm_meta
+  br:
+    desc: Build and run the app
+    cmds:
+      - task: build
+      - task: run

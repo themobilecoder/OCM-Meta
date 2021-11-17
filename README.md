@@ -1,6 +1,11 @@
 # OCM-Meta
 Go server for to provide a list of OnChainMonkey metas from [Metagood OCM Repo](https://github.com/metagood/OnChainMonkeyData)
 
+## Building and running the sample
+taskfile.dev required
+```bash
+$ task br
+```
 
 ## Installation
 
